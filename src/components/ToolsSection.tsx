@@ -11,7 +11,7 @@ export const tools = [
         icon: <Bot className="h-6 w-6" />,
         tags: ["GenAI", "Test Automation", "LLM"],
         state: "In Progress",
-        demoLink: "#"
+        demoLink: "/test-gen-ai"
     },
     {
         title: "TestAutomatorAI",

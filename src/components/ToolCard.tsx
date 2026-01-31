@@ -1,4 +1,3 @@
-
 "use client"
 
 import { motion } from "framer-motion"
@@ -39,17 +38,17 @@ const getStatusConfig = (state: string) => {
 export default function ToolCard({ title, description, icon, demoLink = "#", tags, state = "Idea Stage", delay = 0 }: ToolCardProps) {
     const statusConfig = getStatusConfig(state)
 
-    return (
+    const Card = (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay }}
-            className="group relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900/50 p-6 hover:border-cyan-500/50 hover:shadow-[0_0_30px_-5px_rgba(34,211,238,0.1)] transition-all duration-300"
+            className="group relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900/50 p-6 hover:border-cyan-500/50 hover:shadow-[0_0_30px_-5px_rgba(34,211,238,0.1)] transition-all duration-300 h-full cursor-pointer"
         >
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-purple-500/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
 
-            <div className="relative z-10">
+            <div className="relative z-10 flex flex-col h-full">
                 <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-slate-800 text-cyan-400 group-hover:scale-110 transition-transform duration-300">
                     {icon}
                 </div>
@@ -58,11 +57,11 @@ export default function ToolCard({ title, description, icon, demoLink = "#", tag
                     {title}
                 </h3>
 
-                <p className="mb-4 h-20 text-slate-400 text-sm leading-relaxed">
+                <p className="mb-4 text-slate-400 text-sm leading-relaxed flex-grow">
                     {description}
                 </p>
 
-                <div className="mt-6 flex flex-col gap-4">
+                <div className="mt-auto flex flex-col gap-4">
                     <div className="flex flex-wrap gap-2">
                         {tags.map((tag) => (
                             <span key={tag} className="inline-flex items-center rounded-full bg-slate-800 px-2.5 py-0.5 text-xs font-medium text-slate-300 border border-slate-700">
@@ -81,4 +80,14 @@ export default function ToolCard({ title, description, icon, demoLink = "#", tag
             </div>
         </motion.div>
     )
+
+    if (demoLink && demoLink !== "#") {
+        return (
+            <Link href={demoLink} className="block h-full">
+                {Card}
+            </Link>
+        )
+    }
+
+    return Card
 }
