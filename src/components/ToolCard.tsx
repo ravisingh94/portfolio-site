@@ -1,8 +1,10 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ArrowRight, Bot, CheckCircle2, CircleDashed, Cpu, FileText, Lightbulb, Mic, Play } from "lucide-react"
+import { Bot, CheckCircle2, CircleDashed, Lightbulb } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useAuth } from "./auth/AuthContext"
 
 interface ToolCardProps {
     title: string
@@ -37,6 +39,17 @@ const getStatusConfig = (state: string) => {
 
 export default function ToolCard({ title, description, icon, demoLink = "#", tags, state = "Idea Stage", delay = 0 }: ToolCardProps) {
     const statusConfig = getStatusConfig(state)
+    const { isAuthenticated } = useAuth()
+    const router = useRouter()
+
+    const handleToolClick = (e: React.MouseEvent) => {
+        if (demoLink && demoLink !== "#") {
+            if (!isAuthenticated) {
+                e.preventDefault()
+                router.push(`/login?redirect=${encodeURIComponent(demoLink)}&message=${encodeURIComponent("Please login to access the tools")}`)
+            }
+        }
+    }
 
     const Card = (
         <motion.div
@@ -44,6 +57,7 @@ export default function ToolCard({ title, description, icon, demoLink = "#", tag
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay }}
+            onClick={handleToolClick}
             className="group relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900/50 p-6 hover:border-cyan-500/50 hover:shadow-[0_0_30px_-5px_rgba(34,211,238,0.1)] transition-all duration-300 h-full cursor-pointer"
         >
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-purple-500/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>

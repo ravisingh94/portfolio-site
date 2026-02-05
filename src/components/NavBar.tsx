@@ -4,11 +4,16 @@
 import { useState, useEffect } from "react"
 import { motion, useScroll } from "framer-motion"
 import Link from "next/link"
-import { Terminal } from "lucide-react"
+import { Terminal, LogIn, LogOut, User as UserIcon, Coins } from "lucide-react"
+import { useAuth } from "@/components/auth/AuthContext"
+import { useCredits } from "@/components/auth/CreditContext"
 
 export default function NavBar() {
     const { scrollY } = useScroll()
     const [isScrolled, setIsScrolled] = useState(false)
+    const auth = useAuth()
+    const { tokensUsed, maxTokens } = useCredits()
+    const creditsUsed = Math.min(100, Math.round((tokensUsed / maxTokens) * 100))
 
     useEffect(() => {
         return scrollY.on('change', (latest) => {
@@ -33,9 +38,41 @@ export default function NavBar() {
                     <Link href="#" className="hover:text-cyan-400 transition-colors">About</Link>
                 </nav>
 
-                <Link href="#" className="rounded-full bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-400 hover:bg-cyan-500/20 transition-colors border border-cyan-500/20">
-                    Contact
-                </Link>
+                {auth.isAuthenticated ? (
+                    <div className="flex items-center gap-6">
+                        <div className="hidden sm:flex flex-col items-end gap-1">
+                            <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
+                                <Coins className="h-3 w-3 text-amber-400" />
+                                <span>Credits: {100 - creditsUsed}/100</span>
+                            </div>
+                            <div className="w-24 h-1.5 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                                <motion.div
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${100 - creditsUsed}%` }}
+                                    className={`h-full ${100 - creditsUsed < 20 ? 'bg-red-500' : 100 - creditsUsed < 50 ? 'bg-amber-500' : 'bg-emerald-500'}`}
+                                />
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2 text-slate-400">
+                            <UserIcon className="h-4 w-4" />
+                        </div>
+                        <button
+                            onClick={() => auth.signOut()}
+                            className="flex items-center gap-2 rounded-full bg-red-500/10 px-4 py-2 text-sm font-medium text-red-400 hover:bg-red-500/20 transition-colors border border-red-500/20"
+                        >
+                            <LogOut className="h-4 w-4" />
+                            <span className="hidden sm:inline">Logout</span>
+                        </button>
+                    </div>
+                ) : (
+                    <Link
+                        href="/login"
+                        className="flex items-center gap-2 rounded-full bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-400 hover:bg-cyan-500/20 transition-colors border border-cyan-500/20"
+                    >
+                        <LogIn className="h-4 w-4" />
+                        <span>Login</span>
+                    </Link>
+                )}
             </div>
         </motion.header>
     )

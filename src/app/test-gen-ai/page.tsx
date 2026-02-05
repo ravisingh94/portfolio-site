@@ -2,10 +2,12 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Upload, FileText, CheckCircle2, AlertCircle, Loader2, Bot, ChevronDown, ChevronUp, Download, FileJson, FileType, FileOutput, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Upload, FileText, CheckCircle2, AlertCircle, Loader2, Bot, ChevronDown, ChevronUp, Download, FileJson, FileType, FileOutput, ShieldCheck, Cpu, LogIn } from 'lucide-react';
 import { saveAs } from 'file-saver';
 import { jsPDF } from 'jspdf';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from 'docx';
+import { useCredits } from '@/components/auth/CreditContext';
+import { useAuth } from '@/components/auth/AuthContext';
 
 interface TestCase {
     test_case_id?: string;
@@ -16,7 +18,15 @@ interface TestCase {
     expected_result?: string;
     expected_results?: string[];
     expectations?: string | string[];
+    quality_score?: number;
+    quality_reasoning?: string;
     [key: string]: any;
+}
+
+interface TokenUsage {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
 }
 
 export default function TestGenAIPage() {
@@ -30,12 +40,16 @@ export default function TestGenAIPage() {
     const [featureA, setFeatureA] = useState('');
     const [featureB, setFeatureB] = useState('');
     const [strictMode, setStrictMode] = useState(false);
+    const [isDtc, setIsDtc] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
     const [result, setResult] = useState<any | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [expandedTests, setExpandedTests] = useState<Set<number>>(new Set());
     const [showDownloadDropdown, setShowDownloadDropdown] = useState(false);
+
+    const { tokensUsed, maxTokens, isExhausted, updateCredits, isLoading: isCreditsLoading, maxTestCasesAllowed } = useCredits();
+    const { isAuthenticated } = useAuth();
 
     const toggleTestExpansion = (index: number) => {
         const newExpanded = new Set(expandedTests);
@@ -74,15 +88,16 @@ export default function TestGenAIPage() {
             formData.append('feature_b', featureB);
         }
         formData.append('strict_mode', strictMode.toString());
+        formData.append('is_non_dtc', (!isDtc).toString());
 
         // Log outgoing request for verification
         console.log('📤 Sending Request to Backend:');
         for (const [key, value] of formData.entries()) {
             console.log(`  ${key}:`, value);
         }
-
+        // http://127.0.0.1:8000 or https://test-case-generator-og9a.onrender.com
         try {
-            const response = await fetch('http://localhost:8000/generate', {
+            const response = await fetch('https://test-case-generator-og9a.onrender.com/generate', {
                 method: 'POST',
                 body: formData,
             });
@@ -93,6 +108,11 @@ export default function TestGenAIPage() {
 
             const data = await response.json();
             setResult(data);
+
+            // Update credits if token usage info is available
+            if (data.token_usage && data.token_usage.total_tokens) {
+                await updateCredits(data.token_usage.total_tokens);
+            }
         } catch (err: any) {
             setError(err.message || 'An unexpected error occurred.');
         } finally {
@@ -286,6 +306,35 @@ export default function TestGenAIPage() {
             doc.save(`${filename}.pdf`);
         }
         setShowDownloadDropdown(false);
+    };
+
+    const renderTokenUsage = () => {
+        if (!result || !result.token_usage) return null;
+
+        const usage = result.token_usage as TokenUsage;
+
+        return (
+            <div className="mt-6 pt-6 border-t border-slate-800 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                <div className="flex items-center gap-2 mb-4">
+                    <Cpu className="h-5 w-5 text-blue-400" />
+                    <h3 className="text-lg font-semibold text-slate-200">Processing Summary</h3>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-4 flex flex-col items-center justify-center text-center">
+                        <span className="text-xs text-slate-500 uppercase tracking-wider mb-1">Prompt Tokens</span>
+                        <span className="text-xl font-bold text-slate-100 font-mono">{usage.prompt_tokens.toLocaleString()}</span>
+                    </div>
+                    <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-4 flex flex-col items-center justify-center text-center">
+                        <span className="text-xs text-slate-500 uppercase tracking-wider mb-1">Completion Tokens</span>
+                        <span className="text-xl font-bold text-slate-100 font-mono">{usage.completion_tokens.toLocaleString()}</span>
+                    </div>
+                    <div className="bg-slate-900/40 border border-cyan-900/30 bg-cyan-950/5 rounded-xl p-4 flex flex-col items-center justify-center text-center">
+                        <span className="text-xs text-cyan-500/70 uppercase tracking-wider mb-1">Total Tokens</span>
+                        <span className="text-xl font-bold text-cyan-400 font-mono">{usage.total_tokens.toLocaleString()}</span>
+                    </div>
+                </div>
+            </div>
+        );
     };
 
     const renderTestCases = () => {
@@ -488,6 +537,37 @@ export default function TestGenAIPage() {
                                             </ul>
                                         </div>
                                     )}
+
+
+                                    {(testCase.quality_score || testCase.quality_reasoning) && (
+                                        <div className="mt-4 pt-4 border-t border-slate-800/50">
+                                            <h4 className="text-xs font-semibold text-emerald-400 uppercase tracking-wide mb-2 flex items-center gap-2">
+                                                <ShieldCheck className="h-4 w-4" />
+                                                Quality Analysis
+                                            </h4>
+                                            <div className="bg-emerald-950/20 border border-emerald-900/30 rounded-lg p-3">
+                                                {testCase.quality_score && (
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <span className="text-sm text-slate-400">Rating:</span>
+                                                        <div className="flex gap-1">
+                                                            {[1, 2, 3, 4, 5].map((star) => (
+                                                                <div
+                                                                    key={star}
+                                                                    className={`w-2 h-2 rounded-full ${star <= (testCase.quality_score || 0) ? 'bg-emerald-400' : 'bg-slate-700'}`}
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                        <span className="text-xs font-mono text-emerald-400 ml-1">({testCase.quality_score}/5)</span>
+                                                    </div>
+                                                )}
+                                                {testCase.quality_reasoning && (
+                                                    <p className="text-sm text-slate-300 italic">
+                                                        "{testCase.quality_reasoning}"
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
                                 </>
                             )}
                         </div>
@@ -553,7 +633,22 @@ export default function TestGenAIPage() {
                 <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-4">
-                            <label className="block text-sm font-medium text-slate-300">Requirements Input</label>
+                            <div className="flex items-center justify-between">
+                                <label className="block text-sm font-medium text-slate-300">Requirements Input</label>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsDtc(!isDtc)}
+                                    title="Enable this if requirement has DTCs to be checked"
+                                    className="flex items-center gap-3 px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 hover:border-slate-600 transition-all group"
+                                >
+                                    <span className="text-xs font-medium text-slate-400 group-hover:text-slate-300 transition-colors">
+                                        {isDtc ? "DTC requirements" : "non DTC requirements"}
+                                    </span>
+                                    <div className={`relative w-8 h-4 rounded-full transition-colors ${isDtc ? 'bg-cyan-500' : 'bg-slate-700'}`}>
+                                        <div className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white transition-transform duration-200 ${isDtc ? 'translate-x-4' : 'translate-x-0'}`} />
+                                    </div>
+                                </button>
+                            </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div
                                     className={`relative border-2 border-dashed rounded-xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${file ? 'border-cyan-500/50 bg-cyan-950/20' : 'border-slate-700 hover:border-slate-600 hover:bg-slate-800/50'}`}
@@ -590,7 +685,7 @@ export default function TestGenAIPage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             <div>
-                                <label className="block text-xs font-medium text-slate-400 mb-1">Testing Type</label>
+                                <label className="block text-xs font-medium text-slate-400 mb-1">Test case Type</label>
                                 <select className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200 focus:ring-1 focus:ring-cyan-500 outline-none" value={testType} onChange={(e) => setTestType(e.target.value)}>
                                     <option value="Functional">Functional</option>
                                     <option value="Regression">Regression</option>
@@ -599,7 +694,7 @@ export default function TestGenAIPage() {
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-slate-400 mb-1">Test Case Type</label>
+                                <label className="block text-xs font-medium text-slate-400 mb-1">Category</label>
                                 <select className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200 focus:ring-1 focus:ring-cyan-500 outline-none" value={testCaseType} onChange={(e) => setTestCaseType(e.target.value)}>
                                     <option value="All">All</option>
                                     <option value="Positive">Positive Cases</option>
@@ -619,14 +714,29 @@ export default function TestGenAIPage() {
                                 <input
                                     type="number"
                                     min="0"
-                                    max="50"
+                                    max={maxTestCasesAllowed}
                                     className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200 focus:ring-1 focus:ring-cyan-500 outline-none"
                                     value={totalTests}
-                                    onChange={(e) => setTotalTests(e.target.value === '' ? '' : parseInt(e.target.value))}
+                                    onChange={(e) => {
+                                        const val = e.target.value === '' ? '' : parseInt(e.target.value);
+                                        if (typeof val === 'number' && val > maxTestCasesAllowed) {
+                                            setTotalTests(maxTestCasesAllowed);
+                                        } else {
+                                            setTotalTests(val);
+                                        }
+                                    }}
                                     onBlur={() => {
                                         if (totalTests === '' || Number(totalTests) < 0) setTotalTests(0);
                                     }}
                                 />
+                                {isAuthenticated && (
+                                    <p className="mt-1 text-[10px] text-slate-500 font-medium italic">
+                                        {tokensUsed === 0
+                                            ? "Max test case allowed = 12"
+                                            : `Based on available credits, ${maxTestCasesAllowed} no of test cases allowed.`
+                                        }
+                                    </p>
+                                )}
                             </div>
                         </div>
 
@@ -649,8 +759,20 @@ export default function TestGenAIPage() {
                             )}
                         </div>
 
-                        <button type="submit" disabled={isLoading} className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-medium py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(6,182,212,0.15)] hover:shadow-[0_0_30px_rgba(6,182,212,0.3)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center">
-                            {isLoading ? <><Loader2 className="animate-spin mr-2 h-5 w-5" /> Generating Tests...</> : <><FileText className="mr-2 h-5 w-5" /> Generate Test Cases</>}
+                        <button
+                            type="submit"
+                            disabled={isLoading || isExhausted || !isAuthenticated}
+                            className={`w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-medium py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(6,182,212,0.15)] hover:shadow-[0_0_30px_rgba(6,182,212,0.3)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center`}
+                        >
+                            {isLoading ? (
+                                <><Loader2 className="animate-spin mr-2 h-5 w-5" /> Generating Tests...</>
+                            ) : isExhausted ? (
+                                <><AlertCircle className="mr-2 h-5 w-5" /> all credits utilized. Please come again tomorrow</>
+                            ) : !isAuthenticated ? (
+                                <><LogIn className="mr-2 h-5 w-5" /> Please Login to Generate</>
+                            ) : (
+                                <><FileText className="mr-2 h-5 w-5" /> Generate Test Cases</>
+                            )}
                         </button>
                     </form>
                 </div>
@@ -697,6 +819,7 @@ export default function TestGenAIPage() {
                             <div className="space-y-3">
                                 {renderTestCases()}
                                 {renderQualityReport()}
+                                {renderTokenUsage()}
                             </div>
                         )}
                     </div>

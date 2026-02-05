@@ -13,46 +13,46 @@ export const tools = [
         state: "In Progress",
         demoLink: "/test-gen-ai"
     },
-    {
-        title: "TestAutomatorAI",
-        description: "From test cases to test scripts in seconds. TestAutomatorAI uses AI to auto-generate reliable automation code for infotainment platforms.",
-        icon: <Bot className="h-6 w-6" />,
-        tags: ["GenAI", "Automation", "Smart Testing"],
-        state: "Idea Stage",
-        demoLink: "#"
-    },
-    {
-        title: "TestExecutorAI",
-        description: "Intelligently executes automated infotainment test suites and adapts execution flow in real time using AI. Detects flaky tests, retries smartly, and provides actionable execution insights.",
-        icon: <Bot className="h-6 w-6" />,
-        tags: ["AI Execution", "Test Orchestration", "Infotainment QA"],
-        state: "Built",
-        demoLink: "#"
-    },
-    {
-        title: "InfoLog Insight",
-        description: "Automated root cause analysis for infotainment system logs (CAN, DLT). Translates cryptic error codes into plain English summaries.",
-        icon: <FileCode className="h-6 w-6" />,
-        tags: ["Log Analysis", "Deep Learning", "Diagnostics"],
-        state: "Idea Stage",
-        demoLink: "#"
-    },
-    {
-        title: "Coverage Heatmap",
-        description: "Visualizing test coverage across infotainment modules. Identify under-tested areas (Bluetooth, Navigation, Media) instantly.",
-        icon: <Radio className="h-6 w-6" />,
-        tags: ["Data Viz", "QA Metrics", "React"],
-        state: "Idea Stage",
-        demoLink: "#"
-    },
-    {
-        title: "Defect Predictor",
-        description: "Predict high-risk modules based on historical bug data and code churn. Proactive quality assurance before the build drops.",
-        icon: <Bug className="h-6 w-6" />,
-        tags: ["Predictive AI", "Risk Analysis", "ML"],
-        state: "Idea Stage",
-        demoLink: "#"
-    }
+    // {
+    //     title: "TestAutomatorAI",
+    //     description: "From test cases to test scripts in seconds. TestAutomatorAI uses AI to auto-generate reliable automation code for infotainment platforms.",
+    //     icon: <Bot className="h-6 w-6" />,
+    //     tags: ["GenAI", "Automation", "Smart Testing"],
+    //     state: "Idea Stage",
+    //     demoLink: "#"
+    // },
+    // {
+    //     title: "TestExecutorAI",
+    //     description: "Intelligently executes automated infotainment test suites and adapts execution flow in real time using AI. Detects flaky tests, retries smartly, and provides actionable execution insights.",
+    //     icon: <Bot className="h-6 w-6" />,
+    //     tags: ["AI Execution", "Test Orchestration", "Infotainment QA"],
+    //     state: "Built",
+    //     demoLink: "#"
+    // },
+    // {
+    //     title: "InfoLog Insight",
+    //     description: "Automated root cause analysis for infotainment system logs (CAN, DLT). Translates cryptic error codes into plain English summaries.",
+    //     icon: <FileCode className="h-6 w-6" />,
+    //     tags: ["Log Analysis", "Deep Learning", "Diagnostics"],
+    //     state: "Idea Stage",
+    //     demoLink: "#"
+    // },
+    // {
+    //     title: "Coverage Heatmap",
+    //     description: "Visualizing test coverage across infotainment modules. Identify under-tested areas (Bluetooth, Navigation, Media) instantly.",
+    //     icon: <Radio className="h-6 w-6" />,
+    //     tags: ["Data Viz", "QA Metrics", "React"],
+    //     state: "Idea Stage",
+    //     demoLink: "#"
+    // },
+    // {
+    //     title: "Defect Predictor",
+    //     description: "Predict high-risk modules based on historical bug data and code churn. Proactive quality assurance before the build drops.",
+    //     icon: <Bug className="h-6 w-6" />,
+    //     tags: ["Predictive AI", "Risk Analysis", "ML"],
+    //     state: "Idea Stage",
+    //     demoLink: "#"
+    // }
 ]
 
 export default function ToolsSection() {
