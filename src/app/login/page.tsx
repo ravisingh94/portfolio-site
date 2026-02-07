@@ -48,6 +48,7 @@ function LoginPageContent() {
             // router.push('/') handled by useEffect
         } catch (err: any) {
             setError(err.message || 'Failed to sign in');
+        } finally {
             setIsSubmitting(false);
         }
     };
