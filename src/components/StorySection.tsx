@@ -17,17 +17,17 @@ export default function StorySection() {
                             transition={{ duration: 0.5 }}
                         >
                             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-6">
-                                Why I Built This
+                                About Me
                             </h2>
                             <div className="space-y-4 text-slate-400 text-lg leading-relaxed">
                                 <p>
-                                    After <span className="text-cyan-400 font-semibold">9+ years</span> in infotainment testing, I saw the same problems repeated: manual test creation, log overload, and late defect detection.
+                                    I’m <span className="text-cyan-400 font-semibold">Ravi Ranjan Singh</span>, an Automotive Test Engineer with hands-on experience in manual testing, infotainment systems, and test automation challenges.
                                 </p>
                                 <p>
-                                    I realized that the traditional "test-after-build" approach wasn't scaling with modern software complexity. We needed intelligence, not just automation.
+                                    This website is my personal portfolio, where I explore how AI can practically support testers — especially those transitioning from manual testing to automation.
                                 </p>
                                 <p>
-                                    This site is my playground to experiment with AI solutions for real testing pain points. It transforms from a portfolio of random scripts into an <span className="text-purple-400 font-semibold">expert-driven innovation lab</span>.
+                                    All tools here are built from <span className="text-purple-400 font-semibold">real testing pain points</span> and are continuously evolving through experimentation and learning.
                                 </p>
                             </div>
                         </motion.div>

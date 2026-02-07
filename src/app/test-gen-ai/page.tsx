@@ -819,7 +819,7 @@ export default function TestGenAIPage() {
                             <div className="space-y-3">
                                 {renderTestCases()}
                                 {renderQualityReport()}
-                                {renderTokenUsage()}
+                                {/* {renderTokenUsage()} */}
                             </div>
                         )}
                     </div>

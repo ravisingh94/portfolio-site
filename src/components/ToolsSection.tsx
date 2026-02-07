@@ -1,58 +1,58 @@
 
 "use client"
 
-import { Bot, Bug, FileCode, Mic, Radio } from "lucide-react"
+import { Bot, Bug, FileCode, Mic, Radio, Zap, Layout, Search, BarChart } from "lucide-react"
 import ToolCard from "./ToolCard"
 
 export const tools = [
     {
         title: "TestGenAI",
-        description: "Generate comprehensive infotainment test cases from raw requirements, user stories using advanced LLMs. Covers functional, negative, and edge cases.",
+        description: "Generates functional and edge-case test scenarios from requirements, PRDs, or specifications to reduce manual test design effort.",
         icon: <Bot className="h-6 w-6" />,
-        tags: ["GenAI", "Test Automation", "LLM"],
+        tags: ["GenAI", "Test Design", "Manual Assist"],
         state: "In Progress",
         demoLink: "/test-gen-ai"
     },
-    // {
-    //     title: "TestAutomatorAI",
-    //     description: "From test cases to test scripts in seconds. TestAutomatorAI uses AI to auto-generate reliable automation code for infotainment platforms.",
-    //     icon: <Bot className="h-6 w-6" />,
-    //     tags: ["GenAI", "Automation", "Smart Testing"],
-    //     state: "Idea Stage",
-    //     demoLink: "#"
-    // },
-    // {
-    //     title: "TestExecutorAI",
-    //     description: "Intelligently executes automated infotainment test suites and adapts execution flow in real time using AI. Detects flaky tests, retries smartly, and provides actionable execution insights.",
-    //     icon: <Bot className="h-6 w-6" />,
-    //     tags: ["AI Execution", "Test Orchestration", "Infotainment QA"],
-    //     state: "Built",
-    //     demoLink: "#"
-    // },
-    // {
-    //     title: "InfoLog Insight",
-    //     description: "Automated root cause analysis for infotainment system logs (CAN, DLT). Translates cryptic error codes into plain English summaries.",
-    //     icon: <FileCode className="h-6 w-6" />,
-    //     tags: ["Log Analysis", "Deep Learning", "Diagnostics"],
-    //     state: "Idea Stage",
-    //     demoLink: "#"
-    // },
-    // {
-    //     title: "Coverage Heatmap",
-    //     description: "Visualizing test coverage across infotainment modules. Identify under-tested areas (Bluetooth, Navigation, Media) instantly.",
-    //     icon: <Radio className="h-6 w-6" />,
-    //     tags: ["Data Viz", "QA Metrics", "React"],
-    //     state: "Idea Stage",
-    //     demoLink: "#"
-    // },
-    // {
-    //     title: "Defect Predictor",
-    //     description: "Predict high-risk modules based on historical bug data and code churn. Proactive quality assurance before the build drops.",
-    //     icon: <Bug className="h-6 w-6" />,
-    //     tags: ["Predictive AI", "Risk Analysis", "ML"],
-    //     state: "Idea Stage",
-    //     demoLink: "#"
-    // }
+    {
+        title: "TestAutomatorAI",
+        description: "Assists in identifying automation-friendly test cases and mapping manual scenarios to automation workflows.",
+        icon: <Zap className="h-6 w-6" />,
+        tags: ["Automation Assist", "Workflow", "Productivity"],
+        state: "Idea Stage",
+        demoLink: "#"
+    },
+    {
+        title: "TestExecutorAI",
+        description: "Supports intelligent test execution by prioritizing scenarios based on risk and past failures.",
+        icon: <Layout className="h-6 w-6" />,
+        tags: ["Execution", "Risk Based", "Efficiency"],
+        state: "Idea Stage",
+        demoLink: "#"
+    },
+    {
+        title: "InfoLog Insight",
+        description: "Analyzes system and infotainment logs to highlight anomalies, patterns, and recurring issues.",
+        icon: <Search className="h-6 w-6" />,
+        tags: ["Log Analysis", "Diagnostics", "AI Ops"],
+        state: "Idea Stage",
+        demoLink: "#"
+    },
+    {
+        title: "Coverage Heatmap",
+        description: "Visualizes feature-level and requirement-level test coverage to identify blind spots.",
+        icon: <BarChart className="h-6 w-6" />,
+        tags: ["Coverage", "Visibility", "Metrics"],
+        state: "Idea Stage",
+        demoLink: "#"
+    },
+    {
+        title: "Defect Predictor",
+        description: "Uses historical test data to indicate areas with higher probability of defects.",
+        icon: <Bug className="h-6 w-6" />,
+        tags: ["Prediction", "Quality", "Data Analysis"],
+        state: "Idea Stage",
+        demoLink: "#"
+    }
 ]
 
 export default function ToolsSection() {
@@ -63,10 +63,10 @@ export default function ToolsSection() {
             <div className="container px-4 md:px-6">
                 <div className="mb-12 md:text-center max-w-3xl mx-auto">
                     <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-4">
-                        Where Implementation Meets <span className="text-cyan-400">Innovation</span>
+                        Tools & <span className="text-cyan-400">Experiments</span>
                     </h2>
                     <p className="text-slate-400 text-lg">
-                        A suite of experimental tools designed to solve real-world infotainment testing headaches.
+                        These tools are experimental prototypes, built to explore how AI can support testing activities.
                     </p>
                 </div>
 

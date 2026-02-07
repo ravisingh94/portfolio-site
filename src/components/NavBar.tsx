@@ -44,17 +44,24 @@ export default function NavBar() {
 
                     {auth.isAuthenticated ? (
                         <div className="flex items-center gap-6">
-                            <div className="hidden sm:flex flex-col items-end gap-1">
+                            <div className="hidden sm:flex flex-col items-end gap-1 relative group cursor-help">
                                 <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
                                     <Coins className="h-3 w-3 text-amber-400" />
-                                    <span>Credits: {100 - creditsUsed}/100</span>
+                                    <span>Daily Credits: {100 - creditsUsed}/100</span>
                                 </div>
-                                <div className="w-24 h-1.5 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                                <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
                                     <motion.div
                                         initial={{ width: 0 }}
                                         animate={{ width: `${100 - creditsUsed}%` }}
                                         className={`h-full ${100 - creditsUsed < 20 ? 'bg-red-500' : 100 - creditsUsed < 50 ? 'bg-amber-500' : 'bg-emerald-500'}`}
                                     />
+                                </div>
+
+                                {/* Tooltip */}
+                                <div className="absolute top-full mt-2 right-0 w-48 p-3 bg-slate-900/90 border border-slate-700 rounded-lg shadow-xl backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
+                                    <p className="text-[10px] text-slate-300 leading-relaxed text-center">
+                                        These daily credits will be utilised for using AI Tools.
+                                    </p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-2 text-slate-400">

@@ -29,19 +29,22 @@ export default function Hero() {
                     transition={{ duration: 0.5, delay: 0.1 }}
                     className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6"
                 >
-                    Where <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 neon-text-blue">Infotainment Testing</span>
+                    Bridging <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 neon-text-blue">Manual Testing</span>
                     <br />
-                    Meets <span className="text-white">AI Automation</span>
+                    Automation, and AI
                 </motion.h1>
 
                 <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
-                    className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-10"
+                    className="max-w-3xl mx-auto text-lg md:text-xl text-slate-400 mb-10 leading-relaxed"
                 >
-                    I bridge the gap between manual infotainment validation and next-gen AI-driven test automation.
-                    Reduce test time, predict defects, and ship quality faster.
+                    I design practical AI-assisted tools to help manual testers and QA engineers work faster, smarter, and with more confidence.
+                    <br /><br />
+                    <span className="text-slate-500 text-base">
+                        This personal portfolio showcases experimental solutions that reduce repetitive test effort, improve test coverage understanding, and support better decision-making during software and infotainment testing.
+                    </span>
                 </motion.p>
 
                 <motion.div

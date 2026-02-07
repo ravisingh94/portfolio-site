@@ -10,8 +10,8 @@ export default function Footer() {
             <div className="container px-4 md:px-6">
                 <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
                     <div className="flex flex-col gap-2">
-                        <h3 className="text-xl font-bold text-white">Infotainment Testing Portfolio</h3>
-                        <p className="text-sm">Built by an Automotive Test Engineer.</p>
+                        <h3 className="text-xl font-bold text-white">Ravi Ranjan Singh</h3>
+                        <p className="text-sm">Personal Portfolio & Experiment Lab</p>
                     </div>
 
                     <div className="flex gap-4">
@@ -35,7 +35,12 @@ export default function Footer() {
                 </div>
 
                 <div className="mt-8 border-t border-slate-800 pt-8 text-center text-sm text-slate-500">
-                    <p>© {new Date().getFullYear()} Automotive Test Lab. All experiments are prototypes.</p>
+                    <p className="mb-2">Disclaimer</p>
+                    <p className="max-w-2xl mx-auto italic">
+                        All tools showcased on this site are experimental prototypes created for learning, exploration, and demonstration purposes.
+                        They are not production-ready tools.
+                    </p>
+                    <p className="mt-8">© {new Date().getFullYear()} Ravi Ranjan Singh. All rights reserved.</p>
                 </div>
             </div>
         </footer>
